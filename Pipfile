@@ -5,6 +5,11 @@ name = "pypi"
 
 [packages]
 requests = "*"
+pandas = "*"
+matplotlib = "*"
+keras = "*"
+numpy = "*"
+sklearn = "*"
 
 [dev-packages]
 autopep8 = "*"

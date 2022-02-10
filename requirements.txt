@@ -1,3 +1,5 @@
 pandas_datareader
 matplotlib
 python-dotenv
+ipykernel
+tensorflow
