@@ -3,3 +3,4 @@ src/data/*.csv
 src/data/*.json
 .DS_Store
 temp*
+archive
