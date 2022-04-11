@@ -1,6 +1,4 @@
-.env
-src/data/*.csv
-src/data/*.json
+*.env
 .DS_Store
 temp*
 archive
