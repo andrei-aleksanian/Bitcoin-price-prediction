@@ -2,8 +2,8 @@
 
 ## Env variables
 
-`ALPHA_VANTAGE_KEY` - Alpha vantage api key. https://www.alphavantage.co
-`CRYPTO_API_KEY` - Crypto news api key. https://cryptonews-api.com
+`CRYPTO_COMPARE_KEY` - Crypto compare api key. https://www.cryptocompare.com
+`CRYPTO_NEWS_API_KEY` - Crypto news api key. https://cryptonews-api.com
 `TICKER` - The stock ID. E.g. AAL
 `PATH_RAW_DATA` - Folder to save data as JSON and CSV.
 

@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-CRYPTO_API_KEY = os.environ.get("CRYPTO_API_KEY")
+CRYPTO_NEWS_API_KEY = os.environ.get("CRYPTO_NEWS_API_KEY")
 
 topicsOr = 'Tanalysis,Mining,Taxes,Upgrade,Institutions'
 
 dataArr = []
 for i in range(1, 31):
-  url = f'https://cryptonews-api.com/api/v1?tickers=BTC,ETH&source=Coindesk,Cointelegraph&items=50&page={i}&topicOR={topicsOr}&token={CRYPTO_API_KEY}'
+  url = f'https://cryptonews-api.com/api/v1?tickers=BTC,ETH&source=Coindesk,Cointelegraph&items=50&page={i}&topicOR={topicsOr}&token={CRYPTO_NEWS_API_KEY}'
   r = requests.get(url)
   data = r.json()
   dataArr = dataArr + data["data"]
