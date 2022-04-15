@@ -28,11 +28,9 @@ def visualize_accuracy(history):
 def show_result(x, y, future, model):
   """Visualize single step prediction after x days into future days."""
   plt.plot(range(x[0].shape[0]), x[0], color='b', label='True')
-  plt.plot(x[0].shape[0]+future, model.predict(x)[0][0], marker="o", markersize=10,
-           markeredgecolor="red", markerfacecolor="red", label="Predicted y")
   plt.plot(x[0].shape[0]+future, y[0], marker="o", markersize=10,
            markeredgecolor="blue", markerfacecolor="blue", label="True y")
-  plt.xlabel('Date')
-  plt.ylabel('Close Price')
+  plt.xlabel(f'Date, Predcted - {model.predict(x)[0]}')
+  plt.ylabel('Close Price, predicted')
   plt.legend()
   plt.show()

@@ -1,6 +1,24 @@
 from sklearn.preprocessing import MinMaxScaler
-
+import numpy as np
 SMOOTHING_WINDOW_SIZE = 365
+
+
+def convertToClassification(x_val, y_val, step):
+  """
+  Converts timeseries of stock prices into classification up/down prediction
+  classUp = 1
+  classDown = 0
+  """
+  Y = y_val > x_val[:-step]
+  y_val = Y.astype(int)
+
+  return y_val
+
+
+def normalizeAtOnce(data):
+  scaler = MinMaxScaler()
+  scaler.fit(data)
+  return scaler.transform(data)
 
 
 def normalize(data):
