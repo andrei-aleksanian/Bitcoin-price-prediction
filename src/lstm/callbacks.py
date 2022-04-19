@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-path_checkpoint = "model_checkpoint.h5"
+path_checkpoint = "checkpoints/model_checkpoint.h5"
 es_callback = tf.keras.callbacks.EarlyStopping(
     monitor="val_loss", min_delta=0, patience=5)
 
