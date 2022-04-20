@@ -11,12 +11,12 @@ def evaluateModel(model, x_test, y_test):
   print(f"RMSE - {results[1]}")
 
 
-def getModel(inputs):
+def getModel(inputs, outputLayer):
   inputs = tf.keras.layers.Input(shape=(inputs.shape[1], inputs.shape[2]))
   lstm_out = tf.keras.layers.LSTM(
       100, return_sequences=True, dropout=0.5)(inputs)
   lstm_out = tf.keras.layers.LSTM(100, dropout=0.5)(lstm_out)
-  outputs = tf.keras.layers.Dense(10)(lstm_out)
+  outputs = tf.keras.layers.Dense(outputLayer)(lstm_out)
 
   model = tf.keras.Model(inputs=inputs, outputs=outputs)
   model.compile(optimizer=tf.keras.optimizers.Adam(),
