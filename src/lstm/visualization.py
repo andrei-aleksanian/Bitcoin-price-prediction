@@ -2,6 +2,21 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def showRegressionExample(x, y, model, scaler=None):
+  y_hat = model(x.reshape(1, -1))
+  y_hat = y_hat.numpy().reshape(-1)
+
+  if not scaler is None:
+    y_hat = scaler.inverse_transform(y_hat.reshape(-1, 1)).reshape(-1)
+    y = scaler.inverse_transform(y.reshape(-1, 1)).reshape(-1)
+
+  plt.plot(range(y.shape[0]), y)
+  plt.plot(range(y_hat.shape[0]), y_hat)
+  plt.xlabel('Date')
+  plt.ylabel('Close Price')
+  plt.show()
+
+
 def show_batch(x, y, past):
   plt.plot(range(x.shape[0]), x)
   plt.plot(range(past, past+y.shape[0]), y)
