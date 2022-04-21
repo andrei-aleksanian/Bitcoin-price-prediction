@@ -2,6 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def show_semilogy(date, data):
+  plt.semilogy(date, data)
+  plt.xlabel('Date')
+  plt.ylabel('Close Price')
+  plt.show()
+
+
 def showRegressionExample(x, y, model, scaler=None):
   y_hat = model(x.reshape(1, -1))
   y_hat = y_hat.numpy().reshape(-1)

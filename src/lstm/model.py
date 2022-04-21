@@ -58,12 +58,12 @@ def evaluateModelQuick(model, x_test, y_test):
   print(f"RMSE - {results[1]}")
 
 
-def getModel(inputs, outputLayer):
-  inputs = tf.keras.layers.Input(shape=(inputs.shape[1], inputs.shape[2]))
+def getModel(config):
+  inputs = tf.keras.layers.Input(shape=(config["past"], config["features"]))
   lstm_out = tf.keras.layers.LSTM(
-      100, return_sequences=True, dropout=0.5)(inputs)
-  lstm_out = tf.keras.layers.LSTM(100, dropout=0.5)(lstm_out)
-  outputs = tf.keras.layers.Dense(outputLayer)(lstm_out)
+      config["neurons"], return_sequences=True, dropout=0.3)(inputs)
+  lstm_out = tf.keras.layers.LSTM(config["neurons"], dropout=0.3)(lstm_out)
+  outputs = tf.keras.layers.Dense(config["future"])(lstm_out)
 
   model = tf.keras.Model(inputs=inputs, outputs=outputs)
   model.compile(optimizer=tf.keras.optimizers.Adam(),
