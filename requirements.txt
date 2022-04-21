@@ -10,3 +10,8 @@ pandas_datareader
 python-dotenv
 ipykernel
 tensorflow
+bs4
+transformers
+preprocessing
+torch
+html5lib
