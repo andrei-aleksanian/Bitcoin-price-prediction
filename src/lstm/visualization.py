@@ -10,13 +10,13 @@ def show_semilogy(date, data):
 
 
 def showRegressionExampleMultiDimensional(x, y, model, scaler=None):
-  y_hat = model(x.reshape(1, 10, 6))
+  y_hat = model(x.reshape(1, x.shape[0], x.shape[1]))
   y_hat = y_hat.numpy().reshape(-1)
 
   if not scaler is None:
-    y_hat_dummy = np.zeros((10, 6))
+    y_hat_dummy = np.zeros(x.shape)
     y_hat_dummy[:, 3] = y_hat
-    y_dummy = np.zeros((10, 6))
+    y_dummy = np.zeros(x.shape)
     y_dummy[:, 3] = y
 
     y_hat_dummy = scaler.inverse_transform(y_hat_dummy)

@@ -95,7 +95,8 @@ def prepareTestSetMultiDimensional(x, y, past, future):
   x_split = np.empty((0, past, x.shape[1]))
   y_split = np.empty((0, future))
   for i in range(x.shape[0]-past-future):
-    x_split = np.vstack((x_split, np.array(x[i:past+i]).reshape(1, 10, 6)))
+    x_split = np.vstack(
+        (x_split, np.array(x[i:past+i]).reshape(1, 10, x.shape[1])))
     y_split = np.vstack((y_split, np.array(y[i:i+future]).reshape(-1)))
   return x_split, y_split
 
