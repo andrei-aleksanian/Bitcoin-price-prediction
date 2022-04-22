@@ -16,15 +16,13 @@ def evaluateFinal(getModel, dataset_train, dataset_val, config, name):
     raise FileExistsError("Please, name the model something else")
 
   results = np.empty((0, 2))
-  for batch in dataset_train.take(1):
-    inputs, _ = batch
 
   print("Training Started...")
   print("Iterations:")
 
   # Train the model 10 times and record best validation RMSE:
   for i in range(10):
-    model = getModel(inputs, config["future"])
+    model = getModel(config)
     history = model.fit(
         dataset_train,
         epochs=config["epochs"],

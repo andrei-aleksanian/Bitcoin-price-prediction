@@ -9,6 +9,29 @@ def show_semilogy(date, data):
   plt.show()
 
 
+def showRegressionExampleMultiDimensional(x, y, model, scaler=None):
+  y_hat = model(x.reshape(1, 10, 6))
+  y_hat = y_hat.numpy().reshape(-1)
+
+  if not scaler is None:
+    y_hat_dummy = np.zeros((10, 6))
+    y_hat_dummy[:, 3] = y_hat
+    y_dummy = np.zeros((10, 6))
+    y_dummy[:, 3] = y
+
+    y_hat_dummy = scaler.inverse_transform(y_hat_dummy)
+    y_dummy = scaler.inverse_transform(y_dummy)
+
+    y_hat = y_hat_dummy[:, 3]
+    y = y_dummy[:, 3]
+
+  plt.plot(range(y.shape[0]), y)
+  plt.plot(range(y_hat.shape[0]), y_hat)
+  plt.xlabel('Date')
+  plt.ylabel('Close Price')
+  plt.show()
+
+
 def showRegressionExample(x, y, model, scaler=None):
   y_hat = model(x.reshape(1, -1))
   y_hat = y_hat.numpy().reshape(-1)
