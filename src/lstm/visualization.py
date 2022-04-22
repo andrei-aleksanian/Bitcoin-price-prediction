@@ -9,14 +9,15 @@ def show_semilogy(date, data):
   plt.show()
 
 
-def showRegressionExampleMultiDimensional(x, y, model, scaler=None):
+def showRegressionExampleMultiDimensional(x, y, model, scaler=None, withNews=False):
   y_hat = model(x.reshape(1, x.shape[0], x.shape[1]))
   y_hat = y_hat.numpy().reshape(-1)
 
   if not scaler is None:
-    y_hat_dummy = np.zeros(x.shape)
+    dummyDimensions = (x.shape[0], x.shape[1] - 3) if withNews else x.shape
+    y_hat_dummy = np.zeros(dummyDimensions)
     y_hat_dummy[:, 3] = y_hat
-    y_dummy = np.zeros(x.shape)
+    y_dummy = np.zeros(dummyDimensions)
     y_dummy[:, 3] = y
 
     y_hat_dummy = scaler.inverse_transform(y_hat_dummy)
@@ -55,8 +56,9 @@ def show_batch(x, y, past):
   plt.show()
 
 
-def show_data_simple(data):
+def show_data_simple(data, date):
   plt.plot(range(data.shape[0]), data)
+  plt.xticks(range(0, date.shape[0], 100), date.loc[::100][:10], rotation=45)
   plt.xlabel('Date')
   plt.ylabel('Close Price')
   plt.show()
