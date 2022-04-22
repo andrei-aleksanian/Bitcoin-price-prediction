@@ -8,14 +8,14 @@ import numpy as np
 
 def evaluateFinal(getModel, dataset_train, dataset_val, config, name):
   """
-  Train a model 10 times, record minimum RMSE and MSE, save in a csv.
+  Train a model 10 times, record minimum RMSE, MAE and MAPE, save in a csv.
   Record mean and standard deviation.
   """
 
   if exists("results/{name}.csv"):
     raise FileExistsError("Please, name the model something else")
 
-  results = np.empty((0, 2))
+  results = np.empty((0, 3))
 
   print("Training Started...")
   print("Iterations:")
@@ -29,17 +29,24 @@ def evaluateFinal(getModel, dataset_train, dataset_val, config, name):
         validation_data=dataset_val,
         verbose=0
     )
-    mse = history.history["val_loss"]
-    rmse = history.history["val_rmse"]
-    results = np.vstack((results, np.array([min(mse), min(rmse)]).reshape(-1)))
+    rmse = min(history.history["val_rmse"])
+    mae = min(history.history["val_mae"])
+    mape = min(history.history["val_mape"])
+    results = np.vstack((results, [rmse, mae, mape]))
     print(i+1)
 
-  df = pd.DataFrame(results, columns=["MSE", "RMSE"])
+  df = pd.DataFrame(results, columns=["RMSE", "MAE", "MAPE"])
 
   # Gather mean and standard deviation of RMSE
-  mean = np.mean(results[1])
-  std = np.std(results[1])
-  df2 = pd.DataFrame([[mean, std]], columns=["RMSE mean", "RMSE std"])
+  mean_rmse = np.mean(results[:, 0])
+  std_rmse = np.std(results[:, 0])
+  mean_mae = np.mean(results[:, 1])
+  std_mae = np.std(results[:, 1])
+  mean_mape = np.mean(results[:, 2])
+  std_mape = np.std(results[:, 2])
+
+  df2 = pd.DataFrame([[mean_rmse, std_rmse, mean_mae, std_mae,
+                     mean_mape, std_mape]], columns=["RMSE mean", "RMSE std", "MAE mean", "MAE std", "MAPE mean", "MAPE std"])
   all = pd.concat([df, df2], axis=1)
 
   # Record results in a csv file

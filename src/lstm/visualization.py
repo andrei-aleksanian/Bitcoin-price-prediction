@@ -2,6 +2,19 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
+def show_heatmap(data):
+  """Taken from - https://keras.io/examples/timeseries/timeseries_weather_forecasting/"""
+  plt.matshow(data.corr())
+  plt.xticks(range(data.shape[1]), data.columns, fontsize=14, rotation=90)
+  plt.gca().xaxis.tick_bottom()
+  plt.yticks(range(data.shape[1]), data.columns, fontsize=14)
+
+  cb = plt.colorbar()
+  cb.ax.tick_params(labelsize=14)
+  plt.title("Feature Correlation Heatmap", fontsize=14)
+  plt.show()
+
+
 def show_semilogy(date, data):
   plt.semilogy(date, data)
   plt.xlabel('Date')

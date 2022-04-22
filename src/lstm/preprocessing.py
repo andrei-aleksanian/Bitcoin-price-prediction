@@ -26,7 +26,7 @@ def getDatasetsMultiDimensionalBaseline(config, normalized_data):
   return x_train, y_train
 
 
-def getDatasetsMultiDimensional(config, normalized_data):
+def getDatasetsMultiDimensional(config, normalized_data, indexY=3):
   past = config["past"]
   future = config["future"]
   batch_size = config["batch_size"]
@@ -36,7 +36,7 @@ def getDatasetsMultiDimensional(config, normalized_data):
 
   # Train data
   x_train = train_data
-  y_train = normalized_data[past: future+train_val_split, 3]
+  y_train = normalized_data[past: future+train_val_split, indexY]
 
   dataset_train = tf.keras.preprocessing.timeseries_dataset_from_array(
       x_train,
@@ -47,7 +47,7 @@ def getDatasetsMultiDimensional(config, normalized_data):
 
   # Validation data
   x_val = val_data
-  y_val = normalized_data[train_val_split+past:future+val_test_split, 3]
+  y_val = normalized_data[train_val_split+past:future+val_test_split, indexY]
 
   dataset_val = tf.keras.preprocessing.timeseries_dataset_from_array(
       x_val,
