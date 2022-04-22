@@ -16,6 +16,16 @@ def splitTrainValTest(normalized_data, split_train_val_fraction, split_val_test_
   return train_data, val_data, test_data, train_val_split, val_test_split
 
 
+def getDatasetsMultiDimensionalBaseline(config, normalized_data):
+  # Train data
+  x_train = normalized_data
+  y_train = normalized_data[config["past"]:, 3]
+  x_train, y_train = dataToTimeSeriesMultiDimensional(
+      x_train, y_train, config["past"], config["future"])
+
+  return x_train, y_train
+
+
 def getDatasetsMultiDimensional(config, normalized_data):
   past = config["past"]
   future = config["future"]
@@ -90,7 +100,7 @@ def getDatasets(config, normalized_data):
   return dataset_train, dataset_val, x_test, y_test
 
 
-def prepareTestSetMultiDimensional(x, y, past, future):
+def dataToTimeSeriesMultiDimensional(x, y, past, future):
   """Split x and y into batches of 'past' x that predict 'future' y."""
   x_split = np.empty((0, past, x.shape[1]))
   y_split = np.empty((0, future))
@@ -101,7 +111,7 @@ def prepareTestSetMultiDimensional(x, y, past, future):
   return x_split, y_split
 
 
-def prepareTestSet(x, y, past, future):
+def dataToTimeSeries(x, y, past, future):
   """Split x and y into batches of 'past' x that predict 'future' y."""
   x_split = np.empty((0, past))
   y_split = np.empty((0, future))

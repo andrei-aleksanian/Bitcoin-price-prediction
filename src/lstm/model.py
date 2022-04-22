@@ -64,7 +64,33 @@ def getModel(config):
   outputs = tf.keras.layers.Dense(config["future"])(lstm_out)
 
   model = tf.keras.Model(inputs=inputs, outputs=outputs)
-  model.compile(optimizer=tf.keras.optimizers.Adam(),
-                loss="mse", metrics=[tf.keras.metrics.RootMeanSquaredError(name="rmse")])
+  model.compile(
+      optimizer=tf.keras.optimizers.Adam(),
+      loss="mse",
+      metrics=[
+          tf.keras.metrics.RootMeanSquaredError(name="rmse"),
+          tf.keras.metrics.MeanAbsoluteError(name="mae"),
+          tf.keras.metrics.MeanAbsolutePercentageError(name="mape")
+      ])
+
+  return model
+
+
+def getModelBaseline(config):
+  inputs = tf.keras.layers.Input(
+      shape=config["features"])
+  dense = tf.keras.layers.Dense(config["future"])(inputs)
+  dropout = tf.keras.layers.Dropout(0.3)(dense)
+  outputs = tf.keras.layers.Dense(config["future"])(dropout)
+
+  model = tf.keras.Model(inputs=inputs, outputs=outputs)
+  model.compile(
+      optimizer=tf.keras.optimizers.Adam(),
+      loss="mse",
+      metrics=[
+          tf.keras.metrics.RootMeanSquaredError(name="rmse"),
+          tf.keras.metrics.MeanAbsoluteError(name="mae"),
+          tf.keras.metrics.MeanAbsolutePercentageError(name="mape")
+      ])
 
   return model
