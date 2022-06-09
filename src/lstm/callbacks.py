@@ -11,3 +11,13 @@ modelckpt_callback = tf.keras.callbacks.ModelCheckpoint(
     save_weights_only=True,
     save_best_only=True,
 )
+
+
+def getCheckpointCb(name):
+  return tf.keras.callbacks.ModelCheckpoint(
+      monitor="val_loss",
+      filepath=f"temp/{name}.h5",
+      verbose=0,
+      save_weights_only=True,
+      save_best_only=True,
+  )

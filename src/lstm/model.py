@@ -1,12 +1,61 @@
 from os.path import exists
-from tabnanny import verbose
 
 import tensorflow as tf
 import pandas as pd
 import numpy as np
+from lstm.callbacks import modelckpt_callback, es_callback, getCheckpointCb
 
 
-def evaluateFinal(getModel, dataset_train, dataset_val, config, name):
+def evaluateFinalBaseline(getModel, x_train, y_train, x_test, y_test, config, name):
+  """
+  Train a ANN model 10 times, record minimum RMSE, MAE and MAPE, save in a csv.
+  Record mean and standard deviation.
+  """
+  if exists("results/{name}.csv"):
+    raise FileExistsError("Please, name the model something else")
+
+  results = np.empty((0, 3))
+
+  print("Training Started...")
+  print("Iterations:")
+
+  # Train the model 10 times and record best validation RMSE:
+  for i in range(10):
+    model = getModel(config)
+    model.fit(
+        x=x_train,
+        y=y_train,
+        epochs=config["epochs"],
+        validation_split=0.1,
+        callbacks=[es_callback, getCheckpointCb(f"{name} {i}")],
+        verbose=0
+    )
+
+    model.load_weights(f"temp/{name} {i}.h5")
+    result = model.evaluate(x_test, y_test, batch_size=x_test.shape[0])
+    results = np.vstack((results, result[1:]))
+    print(i+1)
+
+  df = pd.DataFrame(results, columns=["RMSE", "MAE", "MAPE"])
+
+  # Gather mean and standard deviation of RMSE
+  mean_rmse = np.mean(results[:, 0])
+  std_rmse = np.std(results[:, 0])
+  mean_mae = np.mean(results[:, 1])
+  std_mae = np.std(results[:, 1])
+  mean_mape = np.mean(results[:, 2])
+  std_mape = np.std(results[:, 2])
+
+  df2 = pd.DataFrame([[mean_rmse, std_rmse, mean_mae, std_mae,
+                     mean_mape, std_mape]], columns=["RMSE mean", "RMSE std", "MAE mean", "MAE std", "MAPE mean", "MAPE std"])
+  all = pd.concat([df, df2], axis=1)
+
+  # Record results in a csv file
+  all.to_csv(f"results/{name}.csv")
+  print("Done")
+
+
+def evaluateFinal(getModel, dataset_train, dataset_val, x_test, y_test, config, name):
   """
   Train a model 10 times, record minimum RMSE, MAE and MAPE, save in a csv.
   Record mean and standard deviation.
@@ -23,16 +72,21 @@ def evaluateFinal(getModel, dataset_train, dataset_val, config, name):
   # Train the model 10 times and record best validation RMSE:
   for i in range(10):
     model = getModel(config)
-    history = model.fit(
+    model.fit(
         dataset_train,
         epochs=config["epochs"],
         validation_data=dataset_val,
-        verbose=0
+        verbose=0,
+        callbacks=[es_callback, getCheckpointCb(f"{name} {i}")],
     )
-    rmse = min(history.history["val_rmse"])
-    mae = min(history.history["val_mae"])
-    mape = min(history.history["val_mape"])
-    results = np.vstack((results, [rmse, mae, mape]))
+
+    model.load_weights(f"temp/{name} {i}.h5")
+    result = model.evaluate(x_test, y_test, batch_size=x_test.shape[0])
+
+    # rmse = min(history.history["val_rmse"])
+    # mae = min(history.history["val_mae"])
+    # mape = min(history.history["val_mape"])
+    results = np.vstack((results, result[1:]))
     print(i+1)
 
   df = pd.DataFrame(results, columns=["RMSE", "MAE", "MAPE"])

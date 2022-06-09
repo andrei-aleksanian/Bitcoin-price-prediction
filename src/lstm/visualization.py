@@ -22,12 +22,12 @@ def show_semilogy(date, data):
   plt.show()
 
 
-def showRegressionExampleMultiDimensional(x, y, model, scaler=None, withNews=False):
+def showRegressionExampleMultiDimensionalKBest(x, y, model, scaler=None, dim=8):
   y_hat = model(x.reshape(1, x.shape[0], x.shape[1]))
   y_hat = y_hat.numpy().reshape(-1)
 
   if not scaler is None:
-    dummyDimensions = (x.shape[0], x.shape[1] - 3) if withNews else x.shape
+    dummyDimensions = (x.shape[0], dim)
     y_hat_dummy = np.zeros(dummyDimensions)
     y_hat_dummy[:, 3] = y_hat
     y_dummy = np.zeros(dummyDimensions)
@@ -39,8 +39,34 @@ def showRegressionExampleMultiDimensional(x, y, model, scaler=None, withNews=Fal
     y_hat = y_hat_dummy[:, 3]
     y = y_dummy[:, 3]
 
-  plt.plot(range(y.shape[0]), y)
-  plt.plot(range(y_hat.shape[0]), y_hat)
+  plt.plot(range(y.shape[0]), y, label="true")
+  plt.plot(range(y_hat.shape[0]), y_hat, label="predicted")
+  plt.legend()
+  plt.xlabel('Date')
+  plt.ylabel('Close Price')
+  plt.show()
+
+
+def showRegressionExampleMultiDimensional(x, y, model, scaler=None, withNews=False):
+  y_hat = model(x.reshape(1, x.shape[0], x.shape[1]))
+  y_hat = y_hat.numpy().reshape(-1)
+
+  if not scaler is None:
+    dummyDimensions = x.shape
+    y_hat_dummy = np.zeros(dummyDimensions)
+    y_hat_dummy[:, 3] = y_hat
+    y_dummy = np.zeros(dummyDimensions)
+    y_dummy[:, 3] = y
+
+    y_hat_dummy = scaler.inverse_transform(y_hat_dummy)
+    y_dummy = scaler.inverse_transform(y_dummy)
+
+    y_hat = y_hat_dummy[:, 3]
+    y = y_dummy[:, 3]
+
+  plt.plot(range(y.shape[0]), y, label="true")
+  plt.plot(range(y_hat.shape[0]), y_hat, label="predicted")
+  plt.legend()
   plt.xlabel('Date')
   plt.ylabel('Close Price')
   plt.show()
@@ -54,8 +80,9 @@ def showRegressionExample(x, y, model, scaler=None):
     y_hat = scaler.inverse_transform(y_hat.reshape(-1, 1)).reshape(-1)
     y = scaler.inverse_transform(y.reshape(-1, 1)).reshape(-1)
 
-  plt.plot(range(y.shape[0]), y)
-  plt.plot(range(y_hat.shape[0]), y_hat)
+  plt.plot(range(y.shape[0]), y, label="true")
+  plt.plot(range(y_hat.shape[0]), y_hat, label="predicted")
+  plt.legend()
   plt.xlabel('Date')
   plt.ylabel('Close Price')
   plt.show()
@@ -69,11 +96,12 @@ def show_batch(x, y, past):
   plt.show()
 
 
-def show_data_simple(data, date):
+def show_data_simple(data, date, name="Close Price", ticks=1000):
   plt.plot(range(data.shape[0]), data)
-  plt.xticks(range(0, date.shape[0], 100), date.loc[::100][:10], rotation=45)
+  plt.xticks(range(0, date.shape[0], ticks),
+             date.loc[::ticks], rotation=45)
   plt.xlabel('Date')
-  plt.ylabel('Close Price')
+  plt.ylabel(name)
   plt.show()
 
 
